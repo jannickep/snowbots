@@ -1,0 +1,175 @@
+//======================================================================
+/*! \file HOWTO.txt
+ * \brief A short introduction how to use IbeoSDK.
+ * \copydoc Copyright
+ * \author Jan Christian Dittmer (jcd)
+ * \dateOct 4, 2013
+ *///-------------------------------------------------------------------
+
+=======================================================================
+=======================================================================
+Requirements
+=======================================================================
+C++-Compiler
+Tested with (Linux: gcc 4.6.3, Windows VS 2010)
+
+boost has to be installed.
+Tested with 1.48.0 (Linux), 1.47.0 (VS 2010) (precompiled libraries)
+(boost precompiled libraries are not available from boot directly but
+from e.g. http://boost.teeks99.com/, choose the right boost version
+and the libraries for the right visual studio version,
+e.g. vc100 = Visual Studio 2012)
+
+gmake (Linux only)
+provides the make command
+
+
+=======================================================================
+=======================================================================
+To build the demos
+=======================================================================
+
+Linux:
+- open a shell window
+- enter directory IbeoSDK
+- type "make"
+- the demo binaries will be found in IbeoSDK/src/demo
+
+Windows (VS 2010)
+- start VS 2010
+
+- load solution IbeoSDK/ibeosdk.sln
+
+- for each project : open the projects Properties
+	--> Configuration -> "All Configurations"
+	--> Configuration Properties
+		--> C/C++
+			--> General
+				--> Additional Include Directories: set the boost path correctly,
+                                                    change if differs on your system
+
+- for each demo project : open the projects Properties
+	--> Configuration -> "All Configurations"
+	--> Configuration Properties
+		--> Linker
+			--> General
+				--> Additional Library Directories: set the boost path correctly,
+                                                    change if differs on your system
+
+- build the ibeosdk project
+
+- build a demo project
+
+- to run a demo you need to add arguments when you call it from the command
+  line or if you want to debug it with Visual Studio you can add these arguments
+  (like IP address, filename, logfile) in:
+	--> Configuration -> "All Configurations"
+	--> Configuration Properties
+		--> Debugging
+			--> Command Arguments
+
+
+=======================================================================
+=======================================================================
+Concept - IbeoDevice/DataBlock/DataListener
+=======================================================================
+
+The connection to the hardware device, i.e. Ibeo laserscanner or ECU
+will be handled by an IbeoDevice. The IbeoDevice will receive messages
+(scan, object list, vehicle data, images) from the scanner/ECU and
+deserialize each into a DataBlock. On receive it will inform all
+DataListener for the specific type of the DataBlock which has been
+registered to the IbeoDevice.
+
+
+=======================================================================
+=======================================================================
+Build your own programs, using ibeosdk
+=======================================================================
+
+Decide which device to connect to.
+Currently available are
+  IbeoLux   (LUX3/4 Laserscanner)
+  IbeoEcu   (Ibeo ECU device, connected to a scanner)
+
+A collection of all needed include will be included by include
+the following files:
+  IbeoLux include: <ibeosdk/lux.hpp>
+  IbeoEcu include: <ibeosdk/ecu.hpp>
+
+Decide which messages you are interested in and create a listner class
+for each message type. (You will find examples in IbeoSdkFileDemo:
+class MyScanListener, MyObjectListener, ... and in IbeoSdkEcuLiveDemo:
+AllEcuListener where all listeners gathered into one single class).
+
+1. Create the listener objects.
+2. Create the IbeoDevice providing the IP address and port as parameters.
+3. Optional: Set the devices LogFileManger
+4. Register all listener
+5. Establish connection between the hardware and the IbeoDevice class.
+
+The receiving will be handled in a separate thread. So the main thread has
+to be kept alive.
+
+
+=======================================================================
+=======================================================================
+Logging
+=======================================================================
+The LogFile class provides you functions for logging output, e.g.
+logError, logInfo, logWarning, logDebug which can be used instead of
+cerr or cout with operator<<.
+These "functions" are actually macros which call the LogFile methods
+_logError, _logInfo, etc. with predefined compiler macros as arguments,
+i.e. file name, function name and current source code line number.
+The log file name can be either a regular file name or "cerr" which is
+the default. In this case the output will be performed to the cerr
+stream.
+
+Using class LogFileManager one can implement a automatic synchronously
+splitting of the log file and some other IDC output files, which are of
+class SplitFile and has be registered to the LogFileManager object.
+A split of the files will be performed in case the log file has reached
+(or slightly exceeded) its file size limit. Furthermore each registered
+SplitFile can send a split request to its LogFileManager object in case
+the size limit of this file has been exceeded. 
+
+Splits will be performed only before a DataType_LuxScan or DataType_EcuScan
+object. I.e. LogFileManager::checkSplitRequired will be called by IbeoDevice
+before notifying a newly received DataBlock. Only if the data type of this
+DataBlock is DataType_LuxScan or DataType_EcuScan, the method will actually
+check the condition for and perform a split.
+This leads to the situation that the actually size of an output file
+(or log file) will exceed the given size limit depending on how many
+DataBlocks will be received before the next scan. This has to be taken
+into account when setting the file size limit.
+
+An example for a SplitFile you find with class IdcWriter in IbeoSdkWriterDemo.
+
+=======================================================================
+=======================================================================
+How to use Logging
+=======================================================================
+
+Using LogFileManager
+--------------------
+Create a LogFileManager object.
+call LogFile::setTargetFileSize   (to set the maximal file size)
+call LogFile::setLogFileBaseName  (optional; cerr is default)
+call LogFile::setLogLevel         (to set the log level filter)
+call logFileManager.start         (to open the log file)
+
+Optional:
+create the IbeoDevice
+call lux.setLogFileManager        (Set the LogFileManager so that
+                                   the IbeoDevice can trigger a check
+                                   whether a split is necessary.)
+
+
+Not Using LogFileManager
+------------------------
+call LogFile::setLogFileBaseName  (optional; cerr is default)
+call LogFile::setLogLevel         (to set the log level filter)
+call LogFile::getLogFile          (to open the log file)
+
+

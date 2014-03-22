@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin\$(Platformname)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\tmp\$(Platformname)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin\$(Platformname)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\tmp\$(Platformname)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32;_DEBUG;_WINDOWS;_WIN32_WINNT=0x0502;BOOST_ALL_NO_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)/src;C:/Program Files (x86)/boost/boost_1_47</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_WIN32;_WIN32_WINNT=0x0502;BOOST_ALL_NO_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)/src;C:/Program Files (x86)/boost/boost_1_47</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Box2dF.cpp" />
+    <ClCompile Include="datablocks\Command.cpp" />
+    <ClCompile Include="datablocks\DataBlock.cpp" />
+    <ClCompile Include="datablocks\Image.cpp" />
+    <ClCompile Include="datablocks\LogMessageBase.cpp" />
+    <ClCompile Include="datablocks\ObjectListEcu.cpp" />
+    <ClCompile Include="datablocks\ObjectListEcuEt.cpp" />
+    <ClCompile Include="datablocks\ObjectListLux.cpp" />
+    <ClCompile Include="datablocks\ScanEcu.cpp" />
+    <ClCompile Include="datablocks\ScanLux.cpp" />
+    <ClCompile Include="datablocks\VehicleStateBasicEcu.cpp" />
+    <ClCompile Include="datablocks\VehicleStateBasicLux.cpp" />
+    <ClCompile Include="devices\IbeoDevice.cpp" />
+    <ClCompile Include="devices\IbeoEcu.cpp" />
+    <ClCompile Include="devices\IbeoLux.cpp" />
+    <ClCompile Include="devices\IbeoScanner.cpp" />
+    <ClCompile Include="IbeoDataHeader.cpp" />
+    <ClCompile Include="IdcFile.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LogFileManager.cpp" />
+    <ClCompile Include="misc\Version.cpp" />
+    <ClCompile Include="MountingPosition.cpp" />
+    <ClCompile Include="MsgBuffer.cpp" />
+    <ClCompile Include="ObjectEcu.cpp" />
+    <ClCompile Include="ObjectEcuEt.cpp" />
+    <ClCompile Include="ObjectLux.cpp" />
+    <ClCompile Include="Point2d.cpp" />
+    <ClCompile Include="Point2dFloat.cpp" />
+    <ClCompile Include="ResolutionInfo.cpp" />
+    <ClCompile Include="ScannerInfo.cpp" />
+    <ClCompile Include="ScanPointEcu.cpp" />
+    <ClCompile Include="ScanPointLux.cpp" />
+    <ClCompile Include="SplitFile.cpp" />
+    <ClCompile Include="Time.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Box2dF.hpp" />
+    <ClInclude Include="Convert.hpp" />
+    <ClInclude Include="datablocks\Command.hpp" />
+    <ClInclude Include="datablocks\DataBlock.hpp" />
+    <ClInclude Include="datablocks\Image.hpp" />
+    <ClInclude Include="datablocks\LogMessageBase.hpp" />
+    <ClInclude Include="datablocks\LogMessageDebug.hpp" />
+    <ClInclude Include="datablocks\LogMessageError.hpp" />
+    <ClInclude Include="datablocks\LogMessageNote.hpp" />
+    <ClInclude Include="datablocks\LogMessageWarning.hpp" />
+    <ClInclude Include="datablocks\ObjectListEcu.hpp" />
+    <ClInclude Include="datablocks\ObjectListEcuEt.hpp" />
+    <ClInclude Include="datablocks\ObjectListLux.hpp" />
+    <ClInclude Include="datablocks\ScanEcu.hpp" />
+    <ClInclude Include="datablocks\ScanLux.hpp" />
+    <ClInclude Include="datablocks\VehicleStateBasicEcu.hpp" />
+    <ClInclude Include="datablocks\VehicleStateBasicLux.hpp" />
+    <ClInclude Include="datatypes.hpp" />
+    <ClInclude Include="devices\IbeoDevice.hpp" />
+    <ClInclude Include="devices\IbeoEcu.hpp" />
+    <ClInclude Include="devices\IbeoLux.hpp" />
+    <ClInclude Include="devices\IbeoScanner.hpp" />
+    <ClInclude Include="ecu.hpp" />
+    <ClInclude Include="IbeoDataHeader.hpp" />
+    <ClInclude Include="IbeoSDK.hpp" />
+    <ClInclude Include="IdcFile.hpp" />
+    <ClInclude Include="inttypes.hpp" />
+    <ClInclude Include="io.hpp" />
+    <ClInclude Include="listener\DataListener.hpp" />
+    <ClInclude Include="listener\DataStreamer.hpp" />
+    <ClInclude Include="listener\ImageListener.hpp" />
+    <ClInclude Include="listener\LogMessageDebugListener.hpp" />
+    <ClInclude Include="listener\LogMessageErrorListener.hpp" />
+    <ClInclude Include="listener\LogMessageNoteListener.hpp" />
+    <ClInclude Include="listener\LogMessageWarningListener.hpp" />
+    <ClInclude Include="listener\ObjectListEcuEtListener.hpp" />
+    <ClInclude Include="listener\ObjectListEcuListener.hpp" />
+    <ClInclude Include="listener\ObjectListLuxListener.hpp" />
+    <ClInclude Include="listener\ScanEcuListener.hpp" />
+    <ClInclude Include="listener\ScanLuxListener.hpp" />
+    <ClInclude Include="listener\VehicleStateBasicEcuListener.hpp" />
+    <ClInclude Include="listener\VehicleStateBasicLuxListener.hpp" />
+    <ClInclude Include="Log.hpp" />
+    <ClInclude Include="LogFileManager.hpp" />
+    <ClInclude Include="lux.hpp" />
+    <ClInclude Include="Math.hpp" />
+    <ClInclude Include="misc\Concurrency.hpp" />
+    <ClInclude Include="misc\Serializable.hpp" />
+    <ClInclude Include="misc\Unconvertable.hpp" />
+    <ClInclude Include="misc\Version.hpp" />
+    <ClInclude Include="misc\WinCompatibility.hpp" />
+    <ClInclude Include="MountingPosition.hpp" />
+    <ClInclude Include="MsgBuffer.hpp" />
+    <ClInclude Include="ObjectBasic.hpp" />
+    <ClInclude Include="ObjectEcu.hpp" />
+    <ClInclude Include="ObjectEcuEt.hpp" />
+    <ClInclude Include="ObjectLux.hpp" />
+    <ClInclude Include="Point2d.hpp" />
+    <ClInclude Include="Point2dFloat.hpp" />
+    <ClInclude Include="ResolutionInfo.hpp" />
+    <ClInclude Include="ScannerInfo.hpp" />
+    <ClInclude Include="ScanPointEcu.hpp" />
+    <ClInclude Include="ScanPointLux.hpp" />
+    <ClInclude Include="SdkAbort.hpp" />
+    <ClInclude Include="SplitFile.hpp" />
+    <ClInclude Include="Time.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

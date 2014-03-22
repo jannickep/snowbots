@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Header Files\datablocks">
+      <UniqueIdentifier>{0748155e-db35-41d5-9878-e6adf1b5098a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\listener">
+      <UniqueIdentifier>{abf2d70b-e72e-4ccc-9f59-bf28a21c9760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\devices">
+      <UniqueIdentifier>{761f620b-3a0a-4790-bed1-8977bc6896de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\misc">
+      <UniqueIdentifier>{098e211b-c206-4c56-9329-f039f38f8cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\datablock">
+      <UniqueIdentifier>{078f8586-b113-4bba-b3bc-622869e07a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\listener">
+      <UniqueIdentifier>{4ab7321c-9221-4560-a805-5184de278e77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\devices">
+      <UniqueIdentifier>{be66d5fd-fb9b-4a7d-9c8d-51c5360bc1fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\misc">
+      <UniqueIdentifier>{d6f600b2-0a61-4d29-9ce6-816f1a5580a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="datablocks\Command.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\DataBlock.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\Image.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\LogMessageBase.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\ObjectListEcu.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\ObjectListEcuEt.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\ObjectListLux.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\ScanEcu.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\ScanLux.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\VehicleStateBasicEcu.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="datablocks\VehicleStateBasicLux.cpp">
+      <Filter>Source Files\datablock</Filter>
+    </ClCompile>
+    <ClCompile Include="devices\IbeoDevice.cpp">
+      <Filter>Source Files\devices</Filter>
+    </ClCompile>
+    <ClCompile Include="devices\IbeoEcu.cpp">
+      <Filter>Source Files\devices</Filter>
+    </ClCompile>
+    <ClCompile Include="devices\IbeoLux.cpp">
+      <Filter>Source Files\devices</Filter>
+    </ClCompile>
+    <ClCompile Include="devices\IbeoScanner.cpp">
+      <Filter>Source Files\devices</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\Version.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2dF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IbeoDataHeader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IdcFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogFileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MountingPosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEcu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEcuEt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLux.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Point2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Point2dFloat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResolutionInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScannerInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanPointEcu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanPointLux.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="datablocks\Command.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\DataBlock.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\Image.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\LogMessageBase.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\LogMessageDebug.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\LogMessageError.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\LogMessageNote.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\LogMessageWarning.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\ObjectListEcu.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\ObjectListEcuEt.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\ObjectListLux.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\ScanEcu.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\ScanLux.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\VehicleStateBasicEcu.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="datablocks\VehicleStateBasicLux.hpp">
+      <Filter>Header Files\datablocks</Filter>
+    </ClInclude>
+    <ClInclude Include="devices\IbeoDevice.hpp">
+      <Filter>Header Files\devices</Filter>
+    </ClInclude>
+    <ClInclude Include="devices\IbeoEcu.hpp">
+      <Filter>Header Files\devices</Filter>
+    </ClInclude>
+    <ClInclude Include="devices\IbeoLux.hpp">
+      <Filter>Header Files\devices</Filter>
+    </ClInclude>
+    <ClInclude Include="devices\IbeoScanner.hpp">
+      <Filter>Header Files\devices</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\DataListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\DataStreamer.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\ImageListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\LogMessageDebugListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\LogMessageErrorListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\LogMessageNoteListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\LogMessageWarningListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\ObjectListEcuEtListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\ObjectListEcuListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\ObjectListLuxListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\ScanEcuListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\ScanLuxListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\VehicleStateBasicEcuListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="listener\VehicleStateBasicLuxListener.hpp">
+      <Filter>Header Files\listener</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Concurrency.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Serializable.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Unconvertable.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Version.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\WinCompatibility.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2dF.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Convert.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="datatypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ecu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IbeoDataHeader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IbeoSDK.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IdcFile.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inttypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="io.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogFileManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lux.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MountingPosition.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgBuffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBasic.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectEcu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectEcuEt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLux.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2dFloat.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResolutionInfo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScannerInfo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanPointEcu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanPointLux.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SdkAbort.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SplitFile.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

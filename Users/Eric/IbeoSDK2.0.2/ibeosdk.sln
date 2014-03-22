@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibeosdk", "src\ibeosdk\ibeosdk.vcxproj", "{BF6AB5D6-7948-A545-908F-C9A4ACADB113}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IbeoSdkLuxLiveDemo", "src\demo\IbeoSdkLuxLiveDemoProject\IbeoSdkLuxLiveDemo.vcxproj", "{98CBCF69-6483-4DF2-97D7-D2F0021040EB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113} = {BF6AB5D6-7948-A545-908F-C9A4ACADB113}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IbeoSdkEcuLiveDemo", "src\demo\IbeoSdkEcuLiveDemoProject\IbeoSdkEcuLiveDemo.vcxproj", "{7EBB3975-CBE1-4FF5-B628-319768884F90}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113} = {BF6AB5D6-7948-A545-908F-C9A4ACADB113}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IbeoSdkFileDemo", "src\demo\IbeoSdkFileDemoProject\IbeoSdkFileDemo.vcxproj", "{D13DC975-93A6-4EB1-AE20-1866DF983810}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113} = {BF6AB5D6-7948-A545-908F-C9A4ACADB113}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IbeoSdkWriterDemo", "src\demo\IbeoSdkWriterDemoProject\IbeoSdkWriterDemo.vcxproj", "{B3704AED-7929-437D-9589-F401B0196983}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113} = {BF6AB5D6-7948-A545-908F-C9A4ACADB113}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113}.Debug|Win32.Build.0 = Debug|Win32
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113}.Release|Win32.ActiveCfg = Release|Win32
+		{BF6AB5D6-7948-A545-908F-C9A4ACADB113}.Release|Win32.Build.0 = Release|Win32
+		{98CBCF69-6483-4DF2-97D7-D2F0021040EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{98CBCF69-6483-4DF2-97D7-D2F0021040EB}.Debug|Win32.Build.0 = Debug|Win32
+		{98CBCF69-6483-4DF2-97D7-D2F0021040EB}.Release|Win32.ActiveCfg = Release|Win32
+		{98CBCF69-6483-4DF2-97D7-D2F0021040EB}.Release|Win32.Build.0 = Release|Win32
+		{7EBB3975-CBE1-4FF5-B628-319768884F90}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7EBB3975-CBE1-4FF5-B628-319768884F90}.Debug|Win32.Build.0 = Debug|Win32
+		{7EBB3975-CBE1-4FF5-B628-319768884F90}.Release|Win32.ActiveCfg = Release|Win32
+		{7EBB3975-CBE1-4FF5-B628-319768884F90}.Release|Win32.Build.0 = Release|Win32
+		{D13DC975-93A6-4EB1-AE20-1866DF983810}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D13DC975-93A6-4EB1-AE20-1866DF983810}.Debug|Win32.Build.0 = Debug|Win32
+		{D13DC975-93A6-4EB1-AE20-1866DF983810}.Release|Win32.ActiveCfg = Release|Win32
+		{D13DC975-93A6-4EB1-AE20-1866DF983810}.Release|Win32.Build.0 = Release|Win32
+		{B3704AED-7929-437D-9589-F401B0196983}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3704AED-7929-437D-9589-F401B0196983}.Debug|Win32.Build.0 = Debug|Win32
+		{B3704AED-7929-437D-9589-F401B0196983}.Release|Win32.ActiveCfg = Release|Win32
+		{B3704AED-7929-437D-9589-F401B0196983}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
