@@ -7,10 +7,12 @@
 
 //Include Libraries 
 #include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/opencv.hpp"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
+using namespace std;
 
 
 
@@ -33,6 +35,7 @@ Mat ones( 2, 4, CV_32FC1 );
 void Threshold_Demo( int, void* );
 void Blur_Demo(int, void*);
 void drawlines(int, void*);
+void CallBackFunc(int , int , int , int , void*);
 
 int main( int argc, char** argv )
 {
@@ -75,7 +78,7 @@ int main( int argc, char** argv )
 // Display Bird's Eye Image
   namedWindow("Bird's eye", CV_WINDOW_NORMAL );
   imshow( "Bird's eye", birds );
-
+  setMouseCallback("Bird's eye", CallBackFunc, NULL);
   // Two track bars one for threshold and one for blur
   createTrackbar( trackbar_blur, window_name, &blur_value, max_blur, Blur_Demo );
   createTrackbar( trackbar_threshold, window_name, &threshold_value, max_threshold, Threshold_Demo );
@@ -83,10 +86,10 @@ int main( int argc, char** argv )
 
   // The 4 points that select quadilateral on the input , from top-left in clockwise order
       // These four pts are the sides of the rect box used as input
-      inputQuad[0] = Point2f( -30,-60 );
-      inputQuad[1] = Point2f( image.cols+50,-50);
-      inputQuad[2] = Point2f( image.cols+100,image.rows+50);
-      inputQuad[3] = Point2f( -50,image.rows+50  );
+      inputQuad[0] = Point2f( 1259,69 );
+      inputQuad[1] = Point2f( 1901,82);
+      inputQuad[2] = Point2f( 1605,290);
+      inputQuad[3] = Point2f( 201,277  );
       // The 4 points where the mapping is to be done , from top-left in clockwise order
       outputQuad[0] = Point2f( 0,0 );
       outputQuad[1] = Point2f( image.cols-1,0);
@@ -94,10 +97,10 @@ int main( int argc, char** argv )
       outputQuad[3] = Point2f( 0,image.rows-1  );
 
       ones = getPerspectiveTransform( inputQuad, outputQuad );
-      std::cout << "Start" ;
+
       warpPerspective(image, birds, ones, ones.size());
 
-      //warpPerspective(image,birds,ones,birds.size());
+
   //perspectiveTransform(&image,birds,&ones);
 		  //CV_INTER_LINEAR);
   // Wait until user presses a key
@@ -155,4 +158,25 @@ void drawlines(int,void*)
 	   imshow( "Bird's eye", birds );
 	   imshow("Lines", detected_lines);
 	   imshow( "Canny", canny);
+}
+
+void CallBackFunc(int event, int x, int y, int flags, void* userdata)
+{
+if  ( event == EVENT_LBUTTONDOWN )
+{
+cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+}
+else if  ( event == EVENT_RBUTTONDOWN )
+{
+cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+}
+else if  ( event == EVENT_MBUTTONDOWN )
+{
+cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+}
+     else if ( event == EVENT_MOUSEMOVE )
+     {
+         // cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
+
+     }
 }
