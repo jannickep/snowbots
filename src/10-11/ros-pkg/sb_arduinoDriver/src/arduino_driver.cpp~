@@ -20,7 +20,6 @@
 #include "sb_msgs/TurretCommand.h"
 #include "sb_msgs/RobotState.h"
 #include "sb_msgs/IMU.h"
-//TODO add GPS.h
 #include "SerialCommunication.h"
 #include "arduino_driver.h"
 
@@ -107,8 +106,6 @@ int main(int argc, char** argv)
 	}
 	*/
 	sb_msgs::IMU imu;
-
-//TODO add for Gps
 	sb_msgs::RobotState state;
 	
 	ROS_INFO("arduino_driver ready");
