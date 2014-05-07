@@ -135,11 +135,6 @@ void Calibrate(Mat source, std::vector<Trackbar> trackbars){
 					trackbars[i].WindowName,
 					newposition);
 		}
-		std::cout << "------------------------------------" << std::endl;
-		std::cout << "count: " << j << std::endl;
-		std::cout << "nepos: " << newposition << std::endl;
-		std::cout << "name: " << trackbars[i].Name << std::endl
-				<< "window: " << trackbars[i].WindowName << std::endl;
 	}
 }
 
