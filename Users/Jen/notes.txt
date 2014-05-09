@@ -1,0 +1,4 @@
+> configure gps to output nmea gps data
+> connect gps to apm, connect apm to computer, see if data is flowing thru
+> which port?
+> use nmea_navsat_driver 

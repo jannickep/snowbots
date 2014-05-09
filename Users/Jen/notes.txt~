@@ -1,0 +1,3 @@
+> configure gps 
+> use nmea_navsat_driver 
+> how does the computer read gps data from arduino?
