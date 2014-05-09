@@ -174,6 +174,5 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata) {
 				<< ", " << y << ")" << endl;
 	} else if (event == EVENT_MOUSEMOVE) {
 		// cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
-
 	}
 }
