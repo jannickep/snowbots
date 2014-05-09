@@ -1,4 +1,23 @@
+GPS:
+==============================================
+
 > configure gps to output nmea gps data
 > connect gps to apm, connect apm to computer, see if data is flowing thru
 > which port?
 > use nmea_navsat_driver 
+
+http://www.cooking-hacks.com/documentation/tutorials/arduino-gps#controlling
+http://arduino.cc/en/Guide/HomePage
+http://copter.ardupilot.com/wiki/programming-arducopter-with-arduino/
+http://wiki.ros.org/nmea_navsat_driver
+
+
+Pathfinding:
+===============================================
+http://www-personal.umich.edu/~johannb/Papers/paper04.pdf  << 3 pathfinding algorithms
+http://www.frc.ri.cmu.edu/~axs/doc/icra94.pdf              << D* algorithm
+http://idm-lab.org/bib/abstracts/Koen02e.html		   << D* lite
+http://code.google.com/p/dstarlite/			   << D* Lite code implementation
+https://github.com/azampagl/robotics-d-star-lite	   << Another D* Lite implementation
+
+
