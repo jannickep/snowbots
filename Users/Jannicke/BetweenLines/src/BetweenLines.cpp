@@ -17,6 +17,7 @@ using namespace std;
 
 void detectLines(void);
 void findcentre(int);
+void findcentre2(int);
 void drawLine(int);
 int countLines(int);
 
@@ -76,6 +77,7 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+
 void detectLines(void) {
 	int const ROW = image.rows / 2-52;// starting row for checking direction
 	//TODO: for... different horizontal lines I guess to minimize noise, starting with just the centreline
@@ -84,6 +86,7 @@ void detectLines(void) {
 	drawLine(ROW);
 	findcentre(ROW);
 	numLines = countLines(ROW);
+	if (numLines == 2) findcentre2(ROW); // if we detect two lines find the middle of the lane
 }
 
 //Draws a horizontal line at row
@@ -97,13 +100,13 @@ void drawLine(int row)
 	line(image_canny, pt1, pt2, CV_RGB(250, 100, 255), 1, CV_AA);
 }
 
+//Detects where line are and highlights them using circles
 void findcentre(int row) {
 	//TODO: for pixels in line find high low changeovers calculate centre of white lines then centre of path
 	int Mit;
 	int sum = 0;
 	int count = 0;
 	int average;
-	cout<<"findcenter";
 	for (int i=0; i<image_thresholded.cols; i++){
 		Mit = (image_thresholded.at<uchar>(row, i)) % 2; // had problems with data type of binary image. Modulo works to get either 1 or 0
 		cout << Mit << endl;
@@ -123,6 +126,47 @@ void findcentre(int row) {
 	centre.x = average;
 	centre.y = row;
 	circle(image_canny, centre, 10, CV_RGB(250, 100, 255), 1, 8, 0);
+}
+
+//Improved version of find centre when 2 lanes have been detected
+
+void findcentre2(int row) {
+	int Mit;
+	int countWhite = 0;
+	int centreWhite1=0;
+	int centreWhite2=0;
+	int centreLane;
+	int transition = 0;
+	int lastValue = (image_thresholded.at<uchar>(row, 0)) % 2;
+	for (int i=0; i<image_thresholded.cols; i++)
+	{
+		Mit = (image_thresholded.at<uchar>(row, i)) % 2; // had problems with data type of binary image. Modulo works to get either 1 or 0
+		if (lastValue != Mit)
+		{
+
+			if (transition == 0 ) countWhite = i;
+			else if (transition == 1 ) {
+				centreWhite1 = (countWhite + i)/2;
+				cout<<"centreWhite1: "<<centreWhite1<<endl;
+				countWhite = 0;
+			}
+			else if (transition == 2 ) countWhite = i;
+			else if (transition == 3 ) {
+				centreWhite2 = (countWhite + i)/2;
+				cout<<"centreWhite2: "<<centreWhite2<<endl;
+				countWhite = 0;
+			}
+			transition++;
+		}
+		lastValue = Mit;
+	}
+    centreLane = (centreWhite1 + centreWhite2)/2;
+    cout<<"CentreLane:"<<centreLane<<endl;
+	//Put large dot in average of white lines
+	Point centre;
+	centre.x = centreLane;
+	centre.y = row;
+	circle(image_canny, centre, 20, CV_RGB(250, 100, 255), 1, 8, 0);
 }
 
 int countLines(int row){
