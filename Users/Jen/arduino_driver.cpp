@@ -2,7 +2,7 @@
  File: arduino_driver.cpp
  
  Author: Nick Adams and Jarek Ignasmenzies // Jennifer Ling
- Last Edited: December 21, 2010 // May 6th, 2014
+ Last Edited: December 21, 2010 // May 2014
  Version 1.0
  
  driver node to communicate and control arduino
@@ -20,7 +20,8 @@
 #include "sb_msgs/TurretCommand.h"
 #include "sb_msgs/RobotState.h"
 #include "sb_msgs/IMU.h"
-// gps TODO
+#include <nmea_msgs/Sentence.h> // subscribed topic
+#include <sensor_msgs/NavSatFix.h> // published topic
 #include "SerialCommunication.h"
 #include "arduino_driver.h"
 
@@ -40,7 +41,9 @@ static const string CAR_COMMAND_TOPIC = "cmd_vel";
 static const string TURRET_COMMAND_TOPIC = "turret_command";
 static const string ESTOP_TOPIC = "eStop";
 static const string ROBOT_STATE_TOPIC = "robot_state";
-// gps TODO
+static const string GPS_TIMEREAD_TOPIC = "nmea_sentence"; // optional, timestamp read from robot
+static const string GPS_POSITION_TOPIC = "fix"; // gps
+static const string GPS_TIMESTAMP_TOPIC = "time_reference"; // timestamp of original gps reading
 
 static const string INIT_STRING = "BG";
 static const char IDENTIFIER_BYTE = 13;
@@ -88,8 +91,10 @@ int main(int argc, char** argv)
 	Subscriber car_command = n.subscribe(CAR_COMMAND_TOPIC, 1, car_command_callback);
 	Subscriber turret_command = n.subscribe(TURRET_COMMAND_TOPIC, 1, turret_command_callback);
 	Subscriber eStop_topic = n.subscribe(ESTOP_TOPIC, 1, eStop_callback);
-// gps TODO
+	Subscriber gps_timeread = n.subscribe(GPS_TIMEREAD_TOPIC, 1, gps_timeread_callback); // gps
 	
+	Publisher gps_position = n.advertise<sensor_msgs::NavSatFix>(GPS_POSITION_TOPIC, 1); // gps
+	Publisher gps_timestamp = n.advertise<sensor_msgs::TimeReference>(GPS_TIMESTAMP_TOPIC, 1); // gps	
 	Publisher robot_state = n.advertise<sb_msgs::RobotState>(ROBOT_STATE_TOPIC,1);
 	
 	/*
@@ -110,13 +115,14 @@ int main(int argc, char** argv)
 	*/
 	sb_msgs::IMU imu;
 
-//TODO add for Gps ?? does it need sb_msgs?
+	sensor_msgs::NavSatFix fix;  // gps position message
+	sensor_msgs::TimeReference time;  // gps timestamp message
 	sb_msgs::RobotState state;
 	
 	ROS_INFO("arduino_driver ready");
 	servo.throttle = 90;
 	servo.steering = 90;
-    servo.pan = 90;
+    	servo.pan = 90;
 	servo.tilt = 90;
 	//while ros is good
 	ros::Time begin = ros::Time::now();
@@ -153,6 +159,8 @@ int main(int argc, char** argv)
 	    
 	    //publish data
 	    robot_state.publish(state);
+	    gps_position.publish(fix); // gps
+	    gps_timestamp.publish(time); // gps
 	    
 	    //clear buffer (MAY NOT WORK)
 	    link.clearBuffer();
@@ -202,4 +210,9 @@ void eStop_callback(const std_msgs::BoolConstPtr& msg_ptr)
     eStop = msg_ptr->data;
 }
 
-//gps_callback TODO
+//gps_timeread_callback 
+void gps_timeread_callback(const nmea_msgs::SentenceConstPtr& msg_ptr) 
+{
+	// TODO 
+}
+	
