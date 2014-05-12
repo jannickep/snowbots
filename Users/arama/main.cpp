@@ -2,17 +2,22 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 using namespace cv;
+using namespace std;
 
-struct Trackbar{
-	std::string Name;
-	std::string WindowName;
-	int StartPos;
-	int MaxPos;
-};
+#define RED Scalar(0,0,255)
+#define GREEN Scalar(0,255,0)
+#define BLUE Scalar(255,0,0)
 
 void DoNothing(int a, void *b){
 
 }
+
+struct Trackbar{
+	string Name;
+	string WindowName;
+	int StartPos;
+	int MaxPos;
+};
 
 //Trackbars
 Trackbar
@@ -95,15 +100,15 @@ void SetTrackbars(){
 	BluVMax.MaxPos = 255;
 }
 
-void Calibrate(Mat source, std::vector<Trackbar> trackbars){
+void Calibrate(Mat source, vector<Trackbar> trackbars){
 	//Because there should only be 6 trackbars right now:
 	assert(trackbars.size() == 6);
 
 	Scalar hsvmean;
 	Scalar hsvstddev;
 	meanStdDev(source, hsvmean, hsvstddev);
-	std::cout << "Mean: " << hsvmean << std::endl;
-	std::cout << "StdDev: " << hsvstddev << std::endl;
+	cout << "Mean: " << hsvmean << endl;
+	cout << "StdDev: " << hsvstddev << endl;
 
 	for(size_t i = 0; i < 6; i++){
 		//Since the order trackbars are defined in is min, max, min, max
@@ -138,7 +143,30 @@ void Calibrate(Mat source, std::vector<Trackbar> trackbars){
 	}
 }
 
+
+int DetectMaxColorColumn(Mat source){
+	//Assert that were getting a single channel system
+	//That being said I don't think doing this on HSV would break the program
+	//It'd just be kindda pointless
+	assert(source.channels() == 1);
+	vector<int> columnTotals;
+
+	//Calculate which col of pixels has the most of our color
+	reduce(source, columnTotals, 0, CV_REDUCE_SUM, -1);
+
+	//Is it a weird way of finding a distance? yes.
+	//Does it work? yes.And it will do so efficiently.
+	//BTW: this calculate the position of the column w/ the highest sum
+	return distance(columnTotals.begin(), max_element(columnTotals.begin(), columnTotals.end()));
+}
+
 int main() {
+	//Global vars
+	//for calibrating
+	bool calibrating =  false;
+	double calibrationZoneMin = 0.4;
+	double calibrationZoneMax = 0.6;
+	double zoneReSize = 0.01;
 
 	//Acess the first camera
 	VideoCapture camera(0);
@@ -151,14 +179,14 @@ int main() {
 
 	//Check camera opened
 	if (!camera.isOpened()){
-		std::cout << "IM BLIND!" << std::endl;
+		cout << "IM BLIND!" << endl;
 		return -1;
 	}
 
 	//UNLEASH
 	//THE TRACKBARS!
 	SetTrackbars();
-	std::vector<Trackbar> AllTrackbars;
+	vector<Trackbar> AllTrackbars;
 	AllTrackbars.push_back(RedHMin);
 	AllTrackbars.push_back(RedHMax);
 	AllTrackbars.push_back(RedSMin);
@@ -171,8 +199,6 @@ int main() {
 	AllTrackbars.push_back(BluSMax);
 	AllTrackbars.push_back(BluVMin);
 	AllTrackbars.push_back(BluVMax);
-	std::cout << "AllTrackbars.size(): " << AllTrackbars.size() << std::endl;
-	std::cout << "sizeof(AllTrackbars): " << sizeof(AllTrackbars) << std::endl;
 
 	for(size_t i = 0; i < AllTrackbars.size(); ++i){
 		createTrackbar(
@@ -211,9 +237,6 @@ int main() {
 				getTrackbarPos("Blu Sat Max", "Blu"),
 				getTrackbarPos("Blu Val Max", "Blu"));
 
-		//Set the values of these scalars
-		//These do not filter yet because IDK what I should have as default
-
 		//Check that we are getting images from camera
 		int cameracount = 0;
 		do{
@@ -223,7 +246,7 @@ int main() {
 			//If we've tried to get an image over 100 times and
 			//have had no success then something, somewhere, fucked up big time.
 			if(cameracount > 100){
-				std::cout << "camera.read() is returning an empty matrix" << std::endl;
+				cout << "camera.read() is returning an empty matrix" << endl;
 				return -1;
 			}
 		}while(original.empty());
@@ -238,24 +261,134 @@ int main() {
 		//Filter for blu
 		inRange(hsv, blu_min, blu_max, blu);
 
+
+		if(calibrating){
+			rectangle(
+					original,
+					Point(original.cols*calibrationZoneMin,original.rows*calibrationZoneMin),
+					Point(original.cols*calibrationZoneMax,original.rows*calibrationZoneMax),
+					GREEN,
+					1,
+					8,// can be 4, 8 or CV_AA (but I don't think we need anti aliasing do we?)
+					0);
+		}
+
+		//Display a line to show perceived max on screen
+		//Starting with Red
+		int redPos = DetectMaxColorColumn(red);
+		line(
+				original,
+				Point(redPos,0),
+				Point(redPos,red.rows),
+				RED,
+				1,
+				4,
+				0
+				);
+
+		double bluPos = DetectMaxColorColumn(blu);
+		line(
+				original,
+				Point(bluPos,0),
+				Point(bluPos,blu.rows),
+				BLUE,
+				1,
+				4,
+				0
+		);
+
+		//Display images (note: HSV image is being displayed as RGB)
 		imshow("Original", original);
 		imshow("HSV", hsv);
 		imshow("Red", red);
 		imshow("Blu", blu);
 
 		//Deal with key events
-		int key = waitKey(30);
+		int key = waitKey(10);
 		switch(char(key)){
+
+		//Escape key
 		case 27:
-			std::cout << "Escape key press detected. " << std::endl;
+			cout << "Escape key press detected. " << endl;
 			return (0);
-		case 'r':
-			std::cout << "Calibrating red" << std::endl;
+
+		//C key
+		case 'c':
+			//Toggles calibration so that an overlay can be displayed before calibrating
+			//Added bonus: no more accidental calibrations
+			if(!calibrating){
+				cout << "Ready to calibrate." << endl;
+				cout << "c: cancel calibration" << endl;
+				cout << "b: calibrate blue" << endl;
+				cout << "r: calibrate red " << endl;
+				cout << "The calibration zone is represented by the green rectangle." << endl;
+				cout << "To change the size of the rectangle press '[' and ']'" << endl;
+				calibrating = true;
+			}else{
+				cout << "Calibrating cancelled" << endl;
+				calibrating = false;
+			}
 			break;
+
+		//R key
+		case 'r':
+			if(calibrating){
+				cout << "Calibrating red" << endl;
+				//Make a Region of Interest
+				//	by first making a Rect
+				Rect zone = Rect(
+						red.cols*calibrationZoneMin,
+						red.rows*calibrationZoneMin,
+						red.cols*(calibrationZoneMax-calibrationZoneMin),
+						red.rows*(calibrationZoneMax-calibrationZoneMin)
+						);
+
+				//And then using said Rect as a mask for our image
+				Mat calibrationZone = hsv(zone);
+				vector<Trackbar> redvector(&AllTrackbars[0], &AllTrackbars[6]);
+				Calibrate(calibrationZone, redvector);
+				calibrating = false;
+			}
+			break;
+
+		//B key
 		case 'b':
-			std::cout << "Calibrating blu" << std::endl;
-			std::vector<Trackbar> bluvector(&AllTrackbars[6], &AllTrackbars[12]);
-			Calibrate(hsv, bluvector);
+			if(calibrating){
+				cout << "Calibrating blu" << endl;
+				//Make a Region of Interest
+				//	by first making a Rect
+				Rect zone = Rect(
+						blu.cols*calibrationZoneMin,
+						blu.rows*calibrationZoneMin,
+						blu.cols*(calibrationZoneMax-calibrationZoneMin),
+						blu.rows*(calibrationZoneMax-calibrationZoneMin)
+				);
+
+				//And then using said Rect as a mask for our image
+				Mat calibrationZone = hsv(zone);
+				vector<Trackbar> bluvector(&AllTrackbars[6], &AllTrackbars[12]);
+				Calibrate(hsv, bluvector);
+				calibrating = false;
+			}
+			break;
+		//] key
+		case ']':
+			//because a rectangle larger than the screen is just silly
+			if(calibrating
+					&& calibrationZoneMin - zoneReSize > 0
+					&& calibrationZoneMax + zoneReSize < 1){
+				calibrationZoneMin -= zoneReSize;
+				calibrationZoneMax += zoneReSize;
+			}
+			break;
+		//[ Key
+		case '[':
+			//Arguably not necessary
+			if(calibrating
+					&& (calibrationZoneMin + zoneReSize < calibrationZoneMax - zoneReSize)){
+				calibrationZoneMin += zoneReSize;
+				calibrationZoneMax -= zoneReSize;
+			}
 			break;
 		}
 	}
