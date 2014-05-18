@@ -1,12 +1,17 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
+#include <numeric>
 using namespace cv;
 using namespace std;
+
+//Because who needs breakpoints?
+#define QUICK_DEBUG cout << "!: " << __LINE__ << endl;
 
 #define RED Scalar(0,0,255)
 #define GREEN Scalar(0,255,0)
 #define BLUE Scalar(255,0,0)
+
 
 void DoNothing(int a, void *b){
 
@@ -21,10 +26,16 @@ struct Trackbar{
 
 //Trackbars
 Trackbar
+//Reds
 RedHMin, RedHMax, RedSMin,
 RedSMax, RedVMin, RedVMax,
+RedSensitivity,
+//Blus
 BluHMin, BluHMax, BluSMin,
-BluSMax, BluVMin, BluVMax;
+BluSMax, BluVMin, BluVMax,
+BluSensitivity,
+//Both
+Gaussian, MovingAveragePeriod;
 
 void SetTrackbars(){
 	//Set RedHMin:
@@ -63,6 +74,12 @@ void SetTrackbars(){
 	RedVMax.StartPos = 255;
 	RedVMax.MaxPos = 255;
 
+	//Set RedSensitivity
+	RedSensitivity.Name = "Red Sensitivity";
+	RedSensitivity.WindowName = "Red";
+	RedSensitivity.StartPos = 1000;
+	RedSensitivity.MaxPos = 3000;
+
 	//Set BluHMin:
 	BluHMin.Name = "Blu Hue Min";
 	BluHMin.WindowName = "Blu";
@@ -98,21 +115,48 @@ void SetTrackbars(){
 	BluVMax.WindowName = "Blu";
 	BluVMax.StartPos = 255;
 	BluVMax.MaxPos = 255;
+
+	//Set BluSensitivity
+	BluSensitivity.Name = "Blu Sensitivity";
+	BluSensitivity.WindowName = "Blu";
+	BluSensitivity.StartPos = 1000;
+	BluSensitivity.MaxPos = 3000;
+
+	//Set Gaussian
+	Gaussian.Name = "Gaussian Blur Size";
+	Gaussian.WindowName = "Original";
+	Gaussian.StartPos = 1;
+	Gaussian.MaxPos = 50; //<- Don't really think this needs to have a max but hey
+
+	//Set MovingAveragePeriod
+	MovingAveragePeriod.Name = "Moving Average Period";
+	MovingAveragePeriod.WindowName = "Original";
+	MovingAveragePeriod.StartPos = 5;
+	MovingAveragePeriod.MaxPos = 100; //<- Don't really think this needs to have a max but hey
 }
 
 void Calibrate(Mat source, vector<Trackbar> trackbars){
-	//Because there should only be 6 trackbars right now:
-	assert(trackbars.size() == 6);
+	//Because there should only be 7 trackbars right now:
+	assert(trackbars.size() == 7);
 
 	Scalar hsvmean;
 	Scalar hsvstddev;
+
+	//Get the standard deviation and mean
 	meanStdDev(source, hsvmean, hsvstddev);
 	cout << "Mean: " << hsvmean << endl;
 	cout << "StdDev: " << hsvstddev << endl;
 
+	//Multiply our Std Dev by our sensitivity factor
+	double sensitivity = getTrackbarPos(trackbars[6].Name, trackbars[6].WindowName)/1000;
+	hsvstddev.val[0] = hsvstddev.val[0] * sensitivity;
+	hsvstddev.val[1] = hsvstddev.val[1] * sensitivity;
+	hsvstddev.val[2] = hsvstddev.val[2] * sensitivity;
+	cout << "Sensitivity: " << sensitivity << endl;
+
+
 	for(size_t i = 0; i < 6; i++){
 		//Since the order trackbars are defined in is min, max, min, max
-
 		int newposition;
 		int j = i/2;
 		if(i%2 == 0){
@@ -160,28 +204,44 @@ int DetectMaxColorColumn(Mat source){
 	return distance(columnTotals.begin(), max_element(columnTotals.begin(), columnTotals.end()));
 }
 
+
 int main() {
 	//Global vars
+	//For easy changing:
+		//Gaussian filter
+	int gaussianValue = 11; // <- Must be odd
+	int movingAveragePeriod;
+
+
+
 	//for calibrating
 	bool calibrating =  false;
 	double calibrationZoneMin = 0.4;
 	double calibrationZoneMax = 0.6;
 	double zoneReSize = 0.01;
 
+	//To decrease line jumpiness
+	vector<uint> redHistory;
+	vector<uint> bluHistory;
+
+
+
 	//Acess the first camera
 	VideoCapture camera(0);
 
 	//Declare our windows
-	namedWindow("Original", 1);
-	namedWindow("HSV", 1);
-	namedWindow("Red", 1);
-	namedWindow("Blu", 1);
+	namedWindow("Original", WINDOW_NORMAL);
+	namedWindow("HSV", WINDOW_NORMAL);
+	namedWindow("Red", WINDOW_NORMAL);
+	namedWindow("Blu", WINDOW_NORMAL);
 
 	//Check camera opened
 	if (!camera.isOpened()){
 		cout << "IM BLIND!" << endl;
 		return -1;
 	}
+
+
 
 	//UNLEASH
 	//THE TRACKBARS!
@@ -193,12 +253,18 @@ int main() {
 	AllTrackbars.push_back(RedSMax);
 	AllTrackbars.push_back(RedVMin);
 	AllTrackbars.push_back(RedVMax);
+	AllTrackbars.push_back(RedSensitivity);
 	AllTrackbars.push_back(BluHMin);
 	AllTrackbars.push_back(BluHMax);
 	AllTrackbars.push_back(BluSMin);
 	AllTrackbars.push_back(BluSMax);
 	AllTrackbars.push_back(BluVMin);
 	AllTrackbars.push_back(BluVMax);
+	AllTrackbars.push_back(BluSensitivity);
+	AllTrackbars.push_back(Gaussian);
+	AllTrackbars.push_back(MovingAveragePeriod);
+
+
 
 	for(size_t i = 0; i < AllTrackbars.size(); ++i){
 		createTrackbar(
@@ -213,7 +279,8 @@ int main() {
 	while (true) {
 		//Make our matrices
 		Mat original;
-		Mat hsv;
+		Mat hsvraw; // < - unprocessed
+		Mat hsv;	// < - processed
 		Mat red;
 		Mat blu;
 
@@ -237,6 +304,8 @@ int main() {
 				getTrackbarPos("Blu Sat Max", "Blu"),
 				getTrackbarPos("Blu Val Max", "Blu"));
 
+
+
 		//Check that we are getting images from camera
 		int cameracount = 0;
 		do{
@@ -253,13 +322,20 @@ int main() {
 
 
 		//Get a HSV image (which BTW looks trippy as fuck)
-		cvtColor(original, hsv, CV_BGR2HSV);
+		cvtColor(original, hsvraw, CV_BGR2HSV);
+
+		//Process the HSV image
+		//Trackbar pos. is multiplied by 2 and is added one to to ensure it is odd
+		int gaussianValue = getTrackbarPos(Gaussian.Name, Gaussian.WindowName)*2+1;
+		GaussianBlur(hsvraw, hsv, Size(gaussianValue, gaussianValue), 0, 0 );
 
 		//Filter for red
 		inRange(hsv, red_min, red_max, red);
 
+
 		//Filter for blu
 		inRange(hsv, blu_min, blu_max, blu);
+
 
 
 		if(calibrating){
@@ -274,8 +350,29 @@ int main() {
 		}
 
 		//Display a line to show perceived max on screen
+
+		//Get the latest user defined period for our moving averages
+		uint movingAveragePeriod = getTrackbarPos(MovingAveragePeriod.Name, MovingAveragePeriod.WindowName);
+		//And stop it from ever being 0
+		if(movingAveragePeriod == 0)movingAveragePeriod = 1;
+
 		//Starting with Red
 		int redPos = DetectMaxColorColumn(red);
+
+		//Store value for next iteration (except the zeros)
+		//"Only that which has value will go down in history"
+		if((redPos != 0) || (redHistory.size() == 0)){
+			redHistory.push_back(redPos);
+		}
+
+
+		//Use value of previous iteration(s) to make the line less jumpy
+		if(redHistory.size() < movingAveragePeriod){
+			redPos = accumulate(redHistory.begin(), redHistory.end(), 0)/redHistory.size();
+		}else{
+			redPos = accumulate(redHistory.end()-movingAveragePeriod, redHistory.end(), 0)/movingAveragePeriod;
+		}
+
 		line(
 				original,
 				Point(redPos,0),
@@ -287,6 +384,23 @@ int main() {
 				);
 
 		double bluPos = DetectMaxColorColumn(blu);
+
+		//Store value for next iteration (except the zeros)
+		//"Only that which has value will go down in history"
+		if((bluPos != 0) || (bluHistory.size() == 0)){
+			bluHistory.push_back(bluPos);
+		}
+
+
+		//Use value of previous iteration(s) to make the line less jumpy
+		if(bluHistory.size() < movingAveragePeriod){
+			bluPos = accumulate(bluHistory.begin(), bluHistory.end(), 0)/bluHistory.size();
+		}else{
+			bluPos = accumulate(bluHistory.end()-movingAveragePeriod, bluHistory.end(), 0)/movingAveragePeriod;
+		}
+
+
+
 		line(
 				original,
 				Point(bluPos,0),
@@ -297,9 +411,33 @@ int main() {
 				0
 		);
 
+		//Using red and blu Pos construct a line showing where the robot should go
+		//NOTE: According to IGVC rules 2014 red flags are right and blu flags are left
+		double redPercentage = double(redPos)/double(red.cols);
+		double bluPercentage = bluPos/blu.cols;
+
+		double redNet = redPercentage -1; // as it must be kept to the right
+		double bluNet = bluPercentage;
+
+		//Calculate relative push from both
+		double netPercentage = redNet+bluNet;
+
+		//NOTE: doesnt show direction but instead predicted robot path
+		double netPos = (netPercentage+0.5)*original.cols;
+		line(
+				original,
+				Point(netPos, 0),
+				Point(netPos, original.cols),
+				GREEN,
+				1,
+				4,
+				0);
+		cout << "R: " << redNet << endl;
+		cout << "B: " << bluNet << endl;
+		cout << "T: " << netPercentage << endl;
+
 		//Display images (note: HSV image is being displayed as RGB)
 		imshow("Original", original);
-		imshow("HSV", hsv);
 		imshow("Red", red);
 		imshow("Blu", blu);
 
@@ -345,7 +483,7 @@ int main() {
 
 				//And then using said Rect as a mask for our image
 				Mat calibrationZone = hsv(zone);
-				vector<Trackbar> redvector(&AllTrackbars[0], &AllTrackbars[6]);
+				vector<Trackbar> redvector(AllTrackbars.begin(), AllTrackbars.begin()+7);
 				Calibrate(calibrationZone, redvector);
 				calibrating = false;
 			}
@@ -358,16 +496,15 @@ int main() {
 				//Make a Region of Interest
 				//	by first making a Rect
 				Rect zone = Rect(
-						blu.cols*calibrationZoneMin,
-						blu.rows*calibrationZoneMin,
-						blu.cols*(calibrationZoneMax-calibrationZoneMin),
-						blu.rows*(calibrationZoneMax-calibrationZoneMin)
+						red.cols*calibrationZoneMin,
+						red.rows*calibrationZoneMin,
+						red.cols*(calibrationZoneMax-calibrationZoneMin),
+						red.rows*(calibrationZoneMax-calibrationZoneMin)
 				);
-
 				//And then using said Rect as a mask for our image
 				Mat calibrationZone = hsv(zone);
-				vector<Trackbar> bluvector(&AllTrackbars[6], &AllTrackbars[12]);
-				Calibrate(hsv, bluvector);
+				vector<Trackbar> bluvector(AllTrackbars.begin()+7, AllTrackbars.begin()+14);
+				Calibrate(calibrationZone, bluvector);
 				calibrating = false;
 			}
 			break;
@@ -383,7 +520,7 @@ int main() {
 			break;
 		//[ Key
 		case '[':
-			//Arguably not necessary
+			//because the rectangle image would no longer be representative of the area
 			if(calibrating
 					&& (calibrationZoneMin + zoneReSize < calibrationZoneMax - zoneReSize)){
 				calibrationZoneMin += zoneReSize;
@@ -391,6 +528,8 @@ int main() {
 			}
 			break;
 		}
+
+
 	}
 	return 0;
 }
