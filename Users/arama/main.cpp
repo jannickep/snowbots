@@ -5,9 +5,6 @@
 using namespace cv;
 using namespace std;
 
-//Because who needs breakpoints?
-#define QUICK_DEBUG cout << "!: " << __LINE__ << endl;
-
 #define RED Scalar(0,0,255)
 #define GREEN Scalar(0,255,0)
 #define BLUE Scalar(255,0,0)
@@ -432,9 +429,6 @@ int main() {
 				1,
 				4,
 				0);
-		cout << "R: " << redNet << endl;
-		cout << "B: " << bluNet << endl;
-		cout << "T: " << netPercentage << endl;
 
 		//Display images (note: HSV image is being displayed as RGB)
 		imshow("Original", original);
