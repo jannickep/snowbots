@@ -17,21 +17,31 @@ using namespace std;
 
 void detectLines(void);
 void findcentre(int);
-void findcentre2(int);
+int findcentre2(int);
 void drawLine(int);
 int countLines(int);
+
 
 Mat image, image_grey, image_filter, image_thresholded, image_canny;
 int const threshold_value = 160;
 int blur_value = 7;
 int const max_BINARY_value = 255;
 int direction[3]; // x,y,z using right handed co-ordinate system, + z rotate counter clockwise
-
+//TODO: publish message
 
 int main(int argc, char** argv) {
+	VideoCapture cap("sample-course.avi");
+	namedWindow("Display Image", CV_WINDOW_NORMAL);
+
+	while(1){
+	//VideoCapture cap VideoCapture(0); // open the default camera
+	 if(!cap.isOpened())  // check if we succeeded
+    return -1;
+
+	cap>> image;
 
 	//Read image
-	image = imread(argv[1], 1);
+	//image = imread(argv[1], 1);
 
 	//Stop if no image data
 	if (argc != 2 || !image.data) {
@@ -56,7 +66,7 @@ int main(int argc, char** argv) {
 	detectLines();
 
 	//Display image
-	namedWindow("Display Image", CV_WINDOW_NORMAL);
+
 	imshow("Display Image", image);
 
 	//Display gray image
@@ -71,22 +81,47 @@ int main(int argc, char** argv) {
 	namedWindow("Canny", CV_WINDOW_NORMAL);
 	imshow("Canny", image_canny);
 
-	// Wait until user presses a key, will close all windows
-	waitKey(0);
-
+	// Wait for one ms, break if escape is pressed
+	if(waitKey(1) == 27) break;
+	}
+	destroyAllWindows();
 	return 0;
 }
 
 
 void detectLines(void) {
-	int const ROW = image.rows / 2-52;// starting row for checking direction
-	//TODO: for... different horizontal lines I guess to minimize noise, starting with just the centreline
-	//Draw lines on thresholded image, where it is being checked
+	int row = image.rows / 2-52;// starting row for checking direction
+	int betweenRow = 10;
+	int x = 0;
+	int y = 0;
+	int dx = 0;
+	int dy = 0;
+	//TODO: for... different horizontal lines to minimize noise, starting with just the centreline
+
 	int numLines = 0;
-	drawLine(ROW);
-	findcentre(ROW);
-	numLines = countLines(ROW);
-	if (numLines == 2) findcentre2(ROW); // if we detect two lines find the middle of the lane
+	for (int i = 0; i <= 1; i++){
+	//Draw lines on thresholded image, where it is being checked
+	drawLine(row);
+	//findcentre(row);
+	numLines = countLines(row); // how many lanes are detected
+	if (numLines == 2)
+		{
+		x = findcentre2(row); // if we detect two lines find the middle of the lane
+		y = row;
+	if(i == 0)
+	{
+		dx = x;
+		dy = y;
+	}
+	if (i ==1)
+	{
+		dx = x-dx;
+		dy =  dy-y;
+		cout<<"Rise/Run: "<<dy<<"/"<<dx<<endl;
+	}
+	}
+	row = row - betweenRow;
+	}
 }
 
 //Draws a horizontal line at row
@@ -128,9 +163,8 @@ void findcentre(int row) {
 	circle(image_canny, centre, 10, CV_RGB(250, 100, 255), 1, 8, 0);
 }
 
-//Improved version of find centre when 2 lanes have been detected
-
-void findcentre2(int row) {
+//Improved version of find centre when exactly 2 lanes have been detected
+int findcentre2(int row) {
 	int Mit;
 	int countWhite = 0;
 	int centreWhite1=0;
@@ -167,6 +201,7 @@ void findcentre2(int row) {
 	centre.x = centreLane;
 	centre.y = row;
 	circle(image_canny, centre, 20, CV_RGB(250, 100, 255), 1, 8, 0);
+	return centreLane;
 }
 
 int countLines(int row){
@@ -186,3 +221,5 @@ int countLines(int row){
 	cout<<"Number of Lines: "<<lineCount<<endl;
 	return lineCount;
 }
+
+
